@@ -1,0 +1,4 @@
+github "facile-it/FunctionalKit" "0.2.3"
+github "trill-lang/FileCheck" "0.0.5"
+github "typelift/Abstract" "0.0.2"
+github "typelift/SwiftCheck" "0.9.1"

@@ -1,0 +1,12 @@
+[submodule "Carthage/Checkouts/FunctionalKit"]
+	path = Carthage/Checkouts/FunctionalKit
+	url = https://github.com/facile-it/FunctionalKit.git
+[submodule "Carthage/Checkouts/FileCheck"]
+	path = Carthage/Checkouts/FileCheck
+	url = https://github.com/trill-lang/FileCheck.git
+[submodule "Carthage/Checkouts/Abstract"]
+	path = Carthage/Checkouts/Abstract
+	url = https://github.com/typelift/Abstract.git
+[submodule "Carthage/Checkouts/SwiftCheck"]
+	path = Carthage/Checkouts/SwiftCheck
+	url = https://github.com/typelift/SwiftCheck.git
