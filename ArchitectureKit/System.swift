@@ -24,6 +24,8 @@ class System {
     var uiBindings: [(State) -> AsyncResult<AppContext, Void>]
     var userActions: [UserAction]
     var feedback: [(State) -> AsyncResult<AppContext, Event>]
+    //TODO are more declarative way of expressing feedback
+    // Feedback(loadCategories, when: state.shoulLoadCategories)
     
     private init(
         initialState: State,
