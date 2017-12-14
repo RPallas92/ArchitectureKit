@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		41A1E8881FE314C2007FE67F /* FunctionalKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 41A1E8891FE314C2007FE67F /* FunctionalKit.framework */; };
 		969C8C781FE2DBDB007F7D97 /* ArchitectureKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 969C8C6E1FE2DBDB007F7D97 /* ArchitectureKit.framework */; };
 		969C8C7D1FE2DBDB007F7D97 /* ArchitectureKitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 969C8C7C1FE2DBDB007F7D97 /* ArchitectureKitTests.swift */; };
 		969C8C7F1FE2DBDB007F7D97 /* ArchitectureKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 969C8C711FE2DBDB007F7D97 /* ArchitectureKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -37,6 +38,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		41A1E8891FE314C2007FE67F /* FunctionalKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = FunctionalKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		969C8C6E1FE2DBDB007F7D97 /* ArchitectureKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ArchitectureKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		969C8C711FE2DBDB007F7D97 /* ArchitectureKit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ArchitectureKit.h; sourceTree = "<group>"; };
 		969C8C721FE2DBDB007F7D97 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -59,6 +61,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				41A1E8881FE314C2007FE67F /* FunctionalKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -120,6 +123,7 @@
 		96F3C3961FE2DF7500D91813 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				41A1E8891FE314C2007FE67F /* FunctionalKit.framework */,
 				96F3C3B91FE2E69600D91813 /* FunctionalKit.framework */,
 				96F3C39B1FE2E0B300D91813 /* FunctionalKit.framework */,
 			);
