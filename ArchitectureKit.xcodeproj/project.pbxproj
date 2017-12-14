@@ -10,6 +10,20 @@
 		969C8C781FE2DBDB007F7D97 /* ArchitectureKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 969C8C6E1FE2DBDB007F7D97 /* ArchitectureKit.framework */; };
 		969C8C7D1FE2DBDB007F7D97 /* ArchitectureKitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 969C8C7C1FE2DBDB007F7D97 /* ArchitectureKitTests.swift */; };
 		969C8C7F1FE2DBDB007F7D97 /* ArchitectureKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 969C8C711FE2DBDB007F7D97 /* ArchitectureKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		96F3C3A81FE2E4E500D91813 /* State.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96F3C3A31FE2E4E500D91813 /* State.swift */; };
+		96F3C3A91FE2E4E500D91813 /* State.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96F3C3A31FE2E4E500D91813 /* State.swift */; };
+		96F3C3AA1FE2E4E500D91813 /* UserAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96F3C3A41FE2E4E500D91813 /* UserAction.swift */; };
+		96F3C3AB1FE2E4E500D91813 /* UserAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96F3C3A41FE2E4E500D91813 /* UserAction.swift */; };
+		96F3C3AC1FE2E4E500D91813 /* UIButton+ArchitectureExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96F3C3A51FE2E4E500D91813 /* UIButton+ArchitectureExtensions.swift */; };
+		96F3C3AD1FE2E4E500D91813 /* UIButton+ArchitectureExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96F3C3A51FE2E4E500D91813 /* UIButton+ArchitectureExtensions.swift */; };
+		96F3C3AE1FE2E4E500D91813 /* Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96F3C3A61FE2E4E500D91813 /* Event.swift */; };
+		96F3C3AF1FE2E4E500D91813 /* Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96F3C3A61FE2E4E500D91813 /* Event.swift */; };
+		96F3C3B01FE2E4E500D91813 /* System.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96F3C3A71FE2E4E500D91813 /* System.swift */; };
+		96F3C3B11FE2E4E500D91813 /* System.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96F3C3A71FE2E4E500D91813 /* System.swift */; };
+		96F3C3B31FE2E53F00D91813 /* AsyncResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96F3C3B21FE2E53F00D91813 /* AsyncResult.swift */; };
+		96F3C3B41FE2E53F00D91813 /* AsyncResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96F3C3B21FE2E53F00D91813 /* AsyncResult.swift */; };
+		96F3C3B61FE2E57400D91813 /* SystemError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96F3C3B51FE2E57400D91813 /* SystemError.swift */; };
+		96F3C3B71FE2E57400D91813 /* SystemError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96F3C3B51FE2E57400D91813 /* SystemError.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -30,6 +44,14 @@
 		969C8C7C1FE2DBDB007F7D97 /* ArchitectureKitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchitectureKitTests.swift; sourceTree = "<group>"; };
 		969C8C7E1FE2DBDB007F7D97 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		96F3C39B1FE2E0B300D91813 /* FunctionalKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = FunctionalKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		96F3C3A31FE2E4E500D91813 /* State.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = State.swift; sourceTree = "<group>"; };
+		96F3C3A41FE2E4E500D91813 /* UserAction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserAction.swift; sourceTree = "<group>"; };
+		96F3C3A51FE2E4E500D91813 /* UIButton+ArchitectureExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIButton+ArchitectureExtensions.swift"; sourceTree = "<group>"; };
+		96F3C3A61FE2E4E500D91813 /* Event.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Event.swift; sourceTree = "<group>"; };
+		96F3C3A71FE2E4E500D91813 /* System.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = System.swift; sourceTree = "<group>"; };
+		96F3C3B21FE2E53F00D91813 /* AsyncResult.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AsyncResult.swift; sourceTree = "<group>"; };
+		96F3C3B51FE2E57400D91813 /* SystemError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemError.swift; sourceTree = "<group>"; };
+		96F3C3B91FE2E69600D91813 /* FunctionalKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = FunctionalKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -73,8 +95,15 @@
 		969C8C701FE2DBDB007F7D97 /* ArchitectureKit */ = {
 			isa = PBXGroup;
 			children = (
+				96F3C3B21FE2E53F00D91813 /* AsyncResult.swift */,
+				96F3C3A61FE2E4E500D91813 /* Event.swift */,
+				96F3C3A31FE2E4E500D91813 /* State.swift */,
+				96F3C3A71FE2E4E500D91813 /* System.swift */,
+				96F3C3A51FE2E4E500D91813 /* UIButton+ArchitectureExtensions.swift */,
+				96F3C3A41FE2E4E500D91813 /* UserAction.swift */,
 				969C8C711FE2DBDB007F7D97 /* ArchitectureKit.h */,
 				969C8C721FE2DBDB007F7D97 /* Info.plist */,
+				96F3C3B51FE2E57400D91813 /* SystemError.swift */,
 			);
 			path = ArchitectureKit;
 			sourceTree = "<group>";
@@ -91,6 +120,7 @@
 		96F3C3961FE2DF7500D91813 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				96F3C3B91FE2E69600D91813 /* FunctionalKit.framework */,
 				96F3C39B1FE2E0B300D91813 /* FunctionalKit.framework */,
 			);
 			name = Frameworks;
@@ -158,6 +188,7 @@
 				TargetAttributes = {
 					969C8C6D1FE2DBDB007F7D97 = {
 						CreatedOnToolsVersion = 9.1;
+						LastSwiftMigration = 0910;
 						ProvisioningStyle = Automatic;
 					};
 					969C8C761FE2DBDB007F7D97 = {
@@ -206,6 +237,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				96F3C3B01FE2E4E500D91813 /* System.swift in Sources */,
+				96F3C3B31FE2E53F00D91813 /* AsyncResult.swift in Sources */,
+				96F3C3AE1FE2E4E500D91813 /* Event.swift in Sources */,
+				96F3C3AA1FE2E4E500D91813 /* UserAction.swift in Sources */,
+				96F3C3AC1FE2E4E500D91813 /* UIButton+ArchitectureExtensions.swift in Sources */,
+				96F3C3B61FE2E57400D91813 /* SystemError.swift in Sources */,
+				96F3C3A81FE2E4E500D91813 /* State.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -213,7 +251,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				96F3C3B41FE2E53F00D91813 /* AsyncResult.swift in Sources */,
+				96F3C3AD1FE2E4E500D91813 /* UIButton+ArchitectureExtensions.swift in Sources */,
 				969C8C7D1FE2DBDB007F7D97 /* ArchitectureKitTests.swift in Sources */,
+				96F3C3B71FE2E57400D91813 /* SystemError.swift in Sources */,
+				96F3C3AB1FE2E4E500D91813 /* UserAction.swift in Sources */,
+				96F3C3A91FE2E4E500D91813 /* State.swift in Sources */,
+				96F3C3B11FE2E4E500D91813 /* System.swift in Sources */,
+				96F3C3AF1FE2E4E500D91813 /* Event.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -344,6 +389,7 @@
 		969C8C831FE2DBDB007F7D97 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
 				DEFINES_MODULE = YES;
@@ -357,6 +403,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = io.github.rpallas92.ArchitectureKit;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -365,6 +412,7 @@
 		969C8C841FE2DBDB007F7D97 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
 				DEFINES_MODULE = YES;
@@ -386,6 +434,7 @@
 		969C8C861FE2DBDB007F7D97 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 4Z8G52XB6J;
 				INFOPLIST_FILE = ArchitectureKitTests/Info.plist;
@@ -400,6 +449,7 @@
 		969C8C871FE2DBDB007F7D97 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 4Z8G52XB6J;
 				INFOPLIST_FILE = ArchitectureKitTests/Info.plist;
