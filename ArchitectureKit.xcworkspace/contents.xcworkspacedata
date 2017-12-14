@@ -7,4 +7,7 @@
    <FileRef
       location = "group:Carthage/Checkouts/FunctionalKit/FunctionalKit.xcodeproj">
    </FileRef>
+   <FileRef
+      location = "group:Carthage/Checkouts/Abstract/Abstract.xcodeproj">
+   </FileRef>
 </Workspace>

@@ -9,6 +9,7 @@
 import XCTest
 import ArchitectureKit
 import FunctionalKit
+import UIKit
 
 fileprivate typealias Function = () -> ()
 fileprivate typealias Completable = (@escaping Function) -> ()
@@ -89,7 +90,6 @@ class ArchitectureKitTests: XCTestCase {
         system.run {
             expect.fulfill()
         }
-        
         //Simulate user interaction - Tap button
         button.sendActions(for: .touchUpInside)
         

@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		41A1E8881FE314C2007FE67F /* FunctionalKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 41A1E8891FE314C2007FE67F /* FunctionalKit.framework */; };
+		41A1E88A1FE3153B007FE67F /* FunctionalKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 41A1E88B1FE3153B007FE67F /* FunctionalKit.framework */; };
+		41A1E88C1FE315AE007FE67F /* Abstract.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 41A1E88D1FE315AE007FE67F /* Abstract.framework */; };
 		969C8C781FE2DBDB007F7D97 /* ArchitectureKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 969C8C6E1FE2DBDB007F7D97 /* ArchitectureKit.framework */; };
 		969C8C7D1FE2DBDB007F7D97 /* ArchitectureKitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 969C8C7C1FE2DBDB007F7D97 /* ArchitectureKitTests.swift */; };
 		969C8C7F1FE2DBDB007F7D97 /* ArchitectureKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 969C8C711FE2DBDB007F7D97 /* ArchitectureKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -15,7 +17,6 @@
 		96F3C3A91FE2E4E500D91813 /* State.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96F3C3A31FE2E4E500D91813 /* State.swift */; };
 		96F3C3AA1FE2E4E500D91813 /* UserAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96F3C3A41FE2E4E500D91813 /* UserAction.swift */; };
 		96F3C3AB1FE2E4E500D91813 /* UserAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96F3C3A41FE2E4E500D91813 /* UserAction.swift */; };
-		96F3C3AC1FE2E4E500D91813 /* UIButton+ArchitectureExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96F3C3A51FE2E4E500D91813 /* UIButton+ArchitectureExtensions.swift */; };
 		96F3C3AD1FE2E4E500D91813 /* UIButton+ArchitectureExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96F3C3A51FE2E4E500D91813 /* UIButton+ArchitectureExtensions.swift */; };
 		96F3C3AE1FE2E4E500D91813 /* Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96F3C3A61FE2E4E500D91813 /* Event.swift */; };
 		96F3C3AF1FE2E4E500D91813 /* Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96F3C3A61FE2E4E500D91813 /* Event.swift */; };
@@ -39,6 +40,8 @@
 
 /* Begin PBXFileReference section */
 		41A1E8891FE314C2007FE67F /* FunctionalKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = FunctionalKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		41A1E88B1FE3153B007FE67F /* FunctionalKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = FunctionalKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		41A1E88D1FE315AE007FE67F /* Abstract.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Abstract.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		969C8C6E1FE2DBDB007F7D97 /* ArchitectureKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ArchitectureKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		969C8C711FE2DBDB007F7D97 /* ArchitectureKit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ArchitectureKit.h; sourceTree = "<group>"; };
 		969C8C721FE2DBDB007F7D97 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -69,6 +72,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				41A1E88C1FE315AE007FE67F /* Abstract.framework in Frameworks */,
+				41A1E88A1FE3153B007FE67F /* FunctionalKit.framework in Frameworks */,
 				969C8C781FE2DBDB007F7D97 /* ArchitectureKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -102,10 +107,10 @@
 				96F3C3A61FE2E4E500D91813 /* Event.swift */,
 				96F3C3A31FE2E4E500D91813 /* State.swift */,
 				96F3C3A71FE2E4E500D91813 /* System.swift */,
-				96F3C3A51FE2E4E500D91813 /* UIButton+ArchitectureExtensions.swift */,
 				96F3C3A41FE2E4E500D91813 /* UserAction.swift */,
 				969C8C711FE2DBDB007F7D97 /* ArchitectureKit.h */,
 				969C8C721FE2DBDB007F7D97 /* Info.plist */,
+				96F3C3A51FE2E4E500D91813 /* UIButton+ArchitectureExtensions.swift */,
 				96F3C3B51FE2E57400D91813 /* SystemError.swift */,
 			);
 			path = ArchitectureKit;
@@ -123,6 +128,8 @@
 		96F3C3961FE2DF7500D91813 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				41A1E88D1FE315AE007FE67F /* Abstract.framework */,
+				41A1E88B1FE3153B007FE67F /* FunctionalKit.framework */,
 				41A1E8891FE314C2007FE67F /* FunctionalKit.framework */,
 				96F3C3B91FE2E69600D91813 /* FunctionalKit.framework */,
 				96F3C39B1FE2E0B300D91813 /* FunctionalKit.framework */,
@@ -245,7 +252,6 @@
 				96F3C3B31FE2E53F00D91813 /* AsyncResult.swift in Sources */,
 				96F3C3AE1FE2E4E500D91813 /* Event.swift in Sources */,
 				96F3C3AA1FE2E4E500D91813 /* UserAction.swift in Sources */,
-				96F3C3AC1FE2E4E500D91813 /* UIButton+ArchitectureExtensions.swift in Sources */,
 				96F3C3B61FE2E57400D91813 /* SystemError.swift in Sources */,
 				96F3C3A81FE2E4E500D91813 /* State.swift in Sources */,
 			);
