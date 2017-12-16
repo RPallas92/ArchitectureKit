@@ -51,39 +51,33 @@ class ArchitectureKitTests: XCTestCase {
             }
         }
         
-        func loadCategoriesFeedback(state: State) -> AsyncResult<AppContext, Event> {
-            
-            if(state.shouldLoadData){
-                let categories = [
-                    "dev"
-                ]
-                
-                return AsyncResult<AppContext, Event>.unfold { _ in
-                    return Future.unfold { continuation in
-                        
-                        runInBackground { runInUI in
-                            let result = Result<SystemError, Event>.success(Event.categoriesLoaded(Result.success(categories)))
-                            runInUI {
-                                continuation(result)
-                            }
+        func loadCategories() -> AsyncResult<AppContext, Event> {
+            let categories = ["dev"]
+
+            return AsyncResult<AppContext, Event>.unfold { _ in
+                return Future.unfold { continuation in
+                    runInBackground { runInUI in
+                        let result = Result<SystemError, Event>.success(Event.categoriesLoaded(Result.success(categories)))
+                        runInUI {
+                            continuation(result)
                         }
                     }
                 }
-            } else {
-                return System.doNothing
             }
         }
         
         let initialState = State.empty
         let uiBindings = [categoriesBinding, dummyBinding]
-        let feedback = [loadCategoriesFeedback]
+        let feedback = [Feedback.react({_ in loadCategories()}, when: { $0.shouldLoadData})]
         
+        
+        let userAction = UserAction()
         let system = System.pure(
             initialState: initialState,
             context: context,
             reducer: State.reduce,
             uiBindings: uiBindings,
-            userActions: [button.onTap()],
+            userActions: [userAction],
             feedback: feedback
         )
         
@@ -91,7 +85,7 @@ class ArchitectureKitTests: XCTestCase {
             expect.fulfill()
         }
         //Simulate user interaction - Tap button
-        button.sendActions(for: .touchUpInside)
+        userAction.execute(value: 1)
         
         wait(for: [expect], timeout: 10.0)
     }

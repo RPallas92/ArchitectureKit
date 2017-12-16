@@ -12,6 +12,15 @@ protocol AppContext {
     
 }
 
+public struct Feedback {
+    var condition: (State) -> (Bool)
+    var action: (State) -> AsyncResult<AppContext, Event>
+    
+    static func react(_ action: @escaping (State) -> AsyncResult<AppContext, Event>, when condition: @escaping (State) -> (Bool)) -> Feedback {
+        return Feedback(condition: condition, action: action)
+    }
+}
+
 class System {
     static var doNothing = AsyncResult<AppContext,Event>.pureTT(Event.doNothing)
     
@@ -24,17 +33,6 @@ class System {
     var uiBindings: [(State) -> AsyncResult<AppContext, Void>]
     var userActions: [UserAction]
     var feedback: [Feedback]
-    //TODO are more declarative way of expressing feedback
-    // Feedback(loadCategories, when: state.shoulLoadCategories)
-    
-    public struct Feedback {
-        var condition: (State) -> (Bool)
-        var action: (State) -> AsyncResult<AppContext, Event>
-
-        static func pure(_ action: @escaping (State) -> AsyncResult<AppContext, Event>, when condition: @escaping (State) -> (Bool)) -> Feedback {
-            return Feedback(condition: condition, action: action)
-        }
-    }
     
     private init(
         initialState: State,
