@@ -23,9 +23,18 @@ class System {
     var reducer: (State, Event) -> State
     var uiBindings: [(State) -> AsyncResult<AppContext, Void>]
     var userActions: [UserAction]
-    var feedback: [(State) -> AsyncResult<AppContext, Event>]
+    var feedback: [Feedback]
     //TODO are more declarative way of expressing feedback
     // Feedback(loadCategories, when: state.shoulLoadCategories)
+    
+    public struct Feedback {
+        var condition: (State) -> (Bool)
+        var action: (State) -> AsyncResult<AppContext, Event>
+
+        static func pure(_ action: @escaping (State) -> AsyncResult<AppContext, Event>, when condition: @escaping (State) -> (Bool)) -> Feedback {
+            return Feedback(condition: condition, action: action)
+        }
+    }
     
     private init(
         initialState: State,
@@ -33,7 +42,7 @@ class System {
         reducer: @escaping (State, Event) -> State,
         uiBindings: [(State) -> AsyncResult<AppContext, Void>],
         userActions: [UserAction],
-        feedback: [(State) -> AsyncResult<AppContext, Event>]
+        feedback: [Feedback]
         ) {
         
         self.initialState = initialState
@@ -49,7 +58,7 @@ class System {
         reducer: @escaping (State, Event) -> State,
         uiBindings: [(State) -> AsyncResult<AppContext, Void>],
         userActions: [UserAction],
-        feedback: [(State) -> AsyncResult<AppContext, Event>]
+        feedback: [Feedback]
         ) -> System {
         return System(initialState: initialState, context: context, reducer: reducer, uiBindings: uiBindings, userActions: userActions, feedback: feedback)
     }
@@ -83,6 +92,7 @@ class System {
     }
     
     func run(callback: @escaping ()->()){
+        
         self.callback = callback
         self.userActions.forEach { action in
             action.addListener(system: self)
@@ -103,17 +113,32 @@ class System {
             }
             //Feedback
             .flatMapTT { state in
-                let stateAfterFeedback = self.feedback.reduce(
-                    AsyncResult<AppContext, State>.pureTT(state),
-                    { (previousState, feedbackFunction) -> AsyncResult<AppContext, State> in
-                        previousState.flatMapTT { stateValue -> AsyncResult<AppContext, State> in
-                            let computedEvent = feedbackFunction(stateValue)
-                            return computedEvent.mapTT { eventValue in
-                                State.reduce(state: stateValue, event: eventValue)
+                
+                let arrayOfAsyncFeedbacks = self.feedback.map { feedback in
+                    return AsyncResult<AppContext, Feedback>.pureTT(feedback)
+                }
+                
+                let emptyFeedback = Feedback(condition: { _ in true }, action: { _ in AsyncResult<AppContext, Event>.pureTT(Event.doNothing)})
+                let computedAsyncFeedbackResult = arrayOfAsyncFeedbacks.reduce(
+                    AsyncResult<AppContext, (Feedback, State)>.pureTT((emptyFeedback, state)),
+                    { (previousFeedbackAndState, feedbackObj) -> (AsyncResult<AppContext, (Feedback,State)>) in
+                        
+                        previousFeedbackAndState.flatMapTT { (_, state) -> AsyncResult<AppContext, (Feedback,State)> in
+                            feedbackObj.flatMapTT { feedback -> AsyncResult<AppContext, (Feedback,State)> in
+                                if(feedback.condition(state)){
+                                    return feedback.action(state).flatMapTT { newEvent -> AsyncResult<AppContext, (Feedback,State)> in
+                                        let newState = State.reduce(state: state, event: newEvent)
+                                        return AsyncResult<AppContext, (Feedback,State)>.pureTT((feedback, newState))
+                                    }
+                                } else {
+                                    return AsyncResult<AppContext, (Feedback,State)>.pureTT((feedback, state))
+                                }
                             }
                         }
                 })
-                return stateAfterFeedback
+                return computedAsyncFeedbackResult.mapTT { (feedback,state) in
+                    return state
+                }
             }
             //View bindings
             .flatMapTT { state in
