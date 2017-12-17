@@ -38,8 +38,9 @@ extension UIButton: PropertyStoring {
         }
     }
 
-    func onTap() -> UserAction {
+    func onTap(trigger event: Event) -> UserAction {
         addTarget(self, action: #selector(UIButton.onButtonTapped), for: .touchUpInside)
+        userAction.event = event
         return userAction
     }
     

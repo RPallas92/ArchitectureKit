@@ -11,18 +11,14 @@ import Foundation
 class UserAction {
     let asyncResult = AsyncResult<AppContext, Event>.pureTT(Event.loadCategories)
     var listeners = [System]()
+    var event = Event.doNothing
     
-    init() {
-    }
+    init() {}
+    
     func execute(value: Int) {
-        let action = AsyncResult<AppContext, Int>.pureTT(5).mapTT { number -> Event in
-            print("UserAction executed with value: " + String(value))
-            return Event.loadCategories
-        }
-        
+        let action = AsyncResult<AppContext, Event>.pureTT(event)
         notify(action)
     }
-    
     
     func addListener(system: System) {
         listeners.append(system)

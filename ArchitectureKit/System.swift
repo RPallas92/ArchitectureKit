@@ -103,7 +103,7 @@ class System {
     private func doLoop(_ eventResult: AsyncResult<AppContext, Event>) -> AsyncResult<AppContext, Void> {
         return eventResult
             .mapTT { event in
-                State.reduce(state: self.initialState, event: event)
+                State.reduce(state: self.initialState, event: event) //todo current state
             }
             .flatMapTT { state in
                 self.getStateAfterFeedback(from: state)
