@@ -25,6 +25,15 @@ extension AsyncResult where ParameterType: FutureType, ParameterType.ParameterTy
         }
     }
     
+    static func unfoldTT(_ from: @escaping (EnvironmentType, @escaping(Result<SystemError,ValueType>)->())->()) -> AsyncResult<EnvironmentType, ValueType> {
+        return AsyncResult.unfold { context in
+            return Future<Result<SystemError, ValueType>>.unfold { continuation in
+                from(context, continuation)
+            }
+            
+        }
+    }
+    
     func mapTT<H>(_ transform: @escaping (ValueType) -> H) -> AsyncResult<EnvironmentType,H> {
         return self.map { future in
             future.map { result in

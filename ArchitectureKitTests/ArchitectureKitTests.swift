@@ -53,14 +53,12 @@ class ArchitectureKitTests: XCTestCase {
         
         func loadCategories() -> AsyncResult<AppContext, Event> {
             let categories = ["dev"]
-
-            return AsyncResult<AppContext, Event>.unfold { _ in
-                return Future.unfold { continuation in
-                    runInBackground { runInUI in
-                        let result = Result<SystemError, Event>.success(Event.categoriesLoaded(Result.success(categories)))
-                        runInUI {
-                            continuation(result)
-                        }
+            
+            return AsyncResult<AppContext, Event>.unfoldTT { _, continuation in
+                runInBackground { runInUI in
+                    let result = Result<SystemError, Event>.success(Event.categoriesLoaded(Result.success(categories)))
+                    runInUI {
+                        continuation(result)
                     }
                 }
             }
