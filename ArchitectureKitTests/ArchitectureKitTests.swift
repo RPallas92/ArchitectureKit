@@ -37,18 +37,12 @@ class ArchitectureKitTests: XCTestCase {
         let context = AnyContext()
         let button = UIButton()
         
-        func categoriesBinding(state: State) -> AsyncResult<AppContext, Void> {
-            return AsyncResult<AppContext, Void>.ask.flatMap { context -> AsyncResult<AppContext, Void> in
-                print(state.categories)
-                return AsyncResult<AppContext, Void>.pureTT(())
-            }
+        func categoriesBinding(state: State) {
+            print(state.categories)
         }
         
-        func dummyBinding(state: State) -> AsyncResult<AppContext, Void> {
-            return AsyncResult<AppContext, Void>.ask.flatMap { context -> AsyncResult<AppContext, Void> in
-                print("Dummy binding")
-                return AsyncResult<AppContext, Void>.pureTT(())
-            }
+        func dummyBinding(state: State) {
+            print("Dummy binding")
         }
         
         func loadCategories() -> AsyncResult<AppContext, Event> {

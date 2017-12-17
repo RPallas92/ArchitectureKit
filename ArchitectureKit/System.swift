@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import FunctionalKit
 
 protocol AppContext {
     
@@ -30,7 +31,7 @@ class System {
     var initialState: State
     var context: AppContext
     var reducer: (State, Event) -> State
-    var uiBindings: [(State) -> AsyncResult<AppContext, Void>]
+    var uiBindings: [(State) -> ()]
     var userActions: [UserAction]
     var feedback: [Feedback]
     
@@ -38,7 +39,7 @@ class System {
         initialState: State,
         context: AppContext,
         reducer: @escaping (State, Event) -> State,
-        uiBindings: [(State) -> AsyncResult<AppContext, Void>],
+        uiBindings: [(State) -> ()],
         userActions: [UserAction],
         feedback: [Feedback]
         ) {
@@ -54,7 +55,7 @@ class System {
         initialState: State,
         context: AppContext,
         reducer: @escaping (State, Event) -> State,
-        uiBindings: [(State) -> AsyncResult<AppContext, Void>],
+        uiBindings: [(State) -> ()],
         userActions: [UserAction],
         feedback: [Feedback]
         ) -> System {
@@ -141,13 +142,11 @@ class System {
     }
     
     private func bindUI(_ state: State) -> AsyncResult<AppContext, Void> {
-        return self.uiBindings.reduce(
-            AsyncResult<AppContext, Void>.pureTT(()),
-            { (previousAsyncResult, currentUiBinding) -> AsyncResult<AppContext, Void> in
-                previousAsyncResult.flatMapTT { void in
-                    return currentUiBinding(state)
-                }
+        return AsyncResult<AppContext, Void>.unfoldTT { context, continuation in
+            self.uiBindings.forEach { uiBinding in
+                uiBinding(state)
             }
-        )
+            continuation(Result.success(()))
+        }
     }
 }
