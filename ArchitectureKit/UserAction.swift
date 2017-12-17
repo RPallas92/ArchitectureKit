@@ -30,7 +30,7 @@ class UserAction {
     
     func notify(_ action: AsyncResult<AppContext, Event>) {
         listeners.forEach { system in
-            system.onUserAction(event: action)
+            system.onUserAction(action)
         }
     }
 }

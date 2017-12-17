@@ -61,34 +61,6 @@ class System {
         return System(initialState: initialState, context: context, reducer: reducer, uiBindings: uiBindings, userActions: userActions, feedback: feedback)
     }
     
-    var actionExecuting = false
-    func onUserAction(event: AsyncResult<AppContext,Event>) {
-        assert(Thread.isMainThread)
-        if(actionExecuting){
-            self.eventQueue.append(event)
-        } else {
-            actionExecuting = true
-            
-            //1. if queue non empty
-            //2. deque
-            //3. doLoop run
-            //go to 1
-            doLoop(event)
-                //IMPURE PART: EXECUTE SIDE EFFECTS
-                .runT(self.context, { stateResult in
-                    assert(Thread.isMainThread, "ArchitectureKit: Final callback must be run on main thread")
-                    if let callback = self.callback {
-                        callback()
-                        self.actionExecuting = false
-                        if let nextEvent = self.eventQueue.first {
-                            self.eventQueue.removeFirst()
-                            self.onUserAction(event: nextEvent)
-                        }
-                    }
-                })
-        }
-    }
-    
     func run(callback: @escaping ()->()){
         
         self.callback = callback
@@ -103,52 +75,79 @@ class System {
         }
     }
     
-    func doLoop(_ eventResult: AsyncResult<AppContext, Event>) -> AsyncResult<AppContext, Void> {
+    var actionExecuting = false
+    
+    func onUserAction(_ eventAsyncResult: AsyncResult<AppContext,Event>) {
+        assert(Thread.isMainThread)
+        if(actionExecuting){
+            self.eventQueue.append(eventAsyncResult)
+        } else {
+            actionExecuting = true
+            doLoop(eventAsyncResult)
+                //IMPURE PART: EXECUTE SIDE EFFECTS
+                .runT(self.context, { stateResult in
+                    assert(Thread.isMainThread, "ArchitectureKit: Final callback must be run on main thread")
+                    if let callback = self.callback {
+                        callback()
+                        self.actionExecuting = false
+                        if let nextEventAsyncResult = self.eventQueue.first {
+                            self.eventQueue.removeFirst()
+                            self.onUserAction(nextEventAsyncResult)
+                        }
+                    }
+                })
+        }
+    }
+    
+    private func doLoop(_ eventResult: AsyncResult<AppContext, Event>) -> AsyncResult<AppContext, Void> {
         return eventResult
-            //User action
             .mapTT { event in
                 State.reduce(state: self.initialState, event: event)
             }
-            //Feedback
             .flatMapTT { state in
-                
-                let arrayOfAsyncFeedbacks = self.feedback.map { feedback in
-                    return AsyncResult<AppContext, Feedback>.pureTT(feedback)
-                }
-                
-                let emptyFeedback = Feedback(condition: { _ in true }, action: { _ in AsyncResult<AppContext, Event>.pureTT(Event.doNothing)})
-                let computedAsyncFeedbackResult = arrayOfAsyncFeedbacks.reduce(
-                    AsyncResult<AppContext, (Feedback, State)>.pureTT((emptyFeedback, state)),
-                    { (previousFeedbackAndState, feedbackObj) -> (AsyncResult<AppContext, (Feedback,State)>) in
-                        
-                        previousFeedbackAndState.flatMapTT { (_, state) -> AsyncResult<AppContext, (Feedback,State)> in
-                            feedbackObj.flatMapTT { feedback -> AsyncResult<AppContext, (Feedback,State)> in
-                                if(feedback.condition(state)){
-                                    return feedback.action(state).flatMapTT { newEvent -> AsyncResult<AppContext, (Feedback,State)> in
-                                        let newState = State.reduce(state: state, event: newEvent)
-                                        return AsyncResult<AppContext, (Feedback,State)>.pureTT((feedback, newState))
-                                    }
-                                } else {
-                                    return AsyncResult<AppContext, (Feedback,State)>.pureTT((feedback, state))
-                                }
-                            }
-                        }
-                })
-                return computedAsyncFeedbackResult.mapTT { (feedback,state) in
-                    return state
-                }
+                self.getStateAfterFeedback(from: state)
             }
-            //View bindings
             .flatMapTT { state in
-                self.uiBindings.reduce(
-                    AsyncResult<AppContext, Void>.pureTT(()),
-                    { (previousAsyncResult, currentUiBinding) -> AsyncResult<AppContext, Void> in
-                        previousAsyncResult.flatMapTT { void in
-                            return currentUiBinding(state)
+                self.bindUI(state)
+            }
+    }
+    
+    private func getStateAfterFeedback(from state: State) -> AsyncResult<AppContext, State> {
+        let arrayOfAsyncFeedbacks = self.feedback.map { feedback in
+            return AsyncResult<AppContext, Feedback>.pureTT(feedback)
+        }
+        
+        let emptyFeedback = Feedback(condition: { _ in true }, action: { _ in AsyncResult<AppContext, Event>.pureTT(Event.doNothing)})
+        let computedAsyncFeedbackResult = arrayOfAsyncFeedbacks.reduce(
+            AsyncResult<AppContext, (Feedback, State)>.pureTT((emptyFeedback, state)),
+            { (previousFeedbackAndState, feedbackObj) -> (AsyncResult<AppContext, (Feedback,State)>) in
+                
+                previousFeedbackAndState.flatMapTT { (_, state) -> AsyncResult<AppContext, (Feedback,State)> in
+                    feedbackObj.flatMapTT { feedback -> AsyncResult<AppContext, (Feedback,State)> in
+                        if(feedback.condition(state)){
+                            return feedback.action(state).flatMapTT { newEvent -> AsyncResult<AppContext, (Feedback,State)> in
+                                let newState = State.reduce(state: state, event: newEvent)
+                                return AsyncResult<AppContext, (Feedback,State)>.pureTT((feedback, newState))
+                            }
+                        } else {
+                            return AsyncResult<AppContext, (Feedback,State)>.pureTT((feedback, state))
                         }
                     }
-                )
+                }
+        })
+        return computedAsyncFeedbackResult.mapTT { (feedback,state) in
+            return state
+        }
+    }
     
+    private func bindUI(_ state: State) -> AsyncResult<AppContext, Void> {
+        return self.uiBindings.reduce(
+            AsyncResult<AppContext, Void>.pureTT(()),
+            { (previousAsyncResult, currentUiBinding) -> AsyncResult<AppContext, Void> in
+                previousAsyncResult.flatMapTT { void in
+                    return currentUiBinding(state)
+                }
             }
+        )
     }
 }
