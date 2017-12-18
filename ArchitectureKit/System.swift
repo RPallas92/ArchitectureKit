@@ -34,6 +34,8 @@ class System {
     var uiBindings: [(State) -> ()]
     var userActions: [UserAction]
     var feedback: [Feedback]
+    var currentState: State
+    
     
     private init(
         initialState: State,
@@ -50,6 +52,7 @@ class System {
         self.uiBindings = uiBindings
         self.userActions = userActions
         self.feedback = feedback
+        self.currentState = initialState
     }
     static func pure(
         initialState: State,
@@ -103,16 +106,20 @@ class System {
     private func doLoop(_ eventResult: AsyncResult<AppContext, Event>) -> AsyncResult<AppContext, Void> {
         return eventResult
             .mapTT { event in
-                State.reduce(state: self.initialState, event: event) //todo current state
+                State.reduce(state: self.currentState, event: event) //todo current state
             }
             .flatMapTT { state in
                 self.getStateAfterFeedback(from: state)
+            }
+            .mapTT { state in
+                self.currentState = state
+                return state
             }
             .flatMapTT { state in
                 self.bindUI(state)
             }
     }
-    
+
     private func getStateAfterFeedback(from state: State) -> AsyncResult<AppContext, State> {
         let arrayOfAsyncFeedbacks = self.feedback.map { feedback in
             return AsyncResult<AppContext, Feedback>.pureTT(feedback)
@@ -140,7 +147,7 @@ class System {
             return state
         }
     }
-    
+
     private func bindUI(_ state: State) -> AsyncResult<AppContext, Void> {
         return AsyncResult<AppContext, Void>.unfoldTT { context, continuation in
             self.uiBindings.forEach { uiBinding in
