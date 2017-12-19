@@ -28,7 +28,6 @@ enum SystemError: Error {
     case genericError
 }
 
-
 enum Event {
     case loadCategories
     case categoriesLoaded(Result<SystemError, [String]>)
@@ -93,7 +92,7 @@ class ArchitectureKitTests: XCTestCase {
         let feedback = [Feedback<State, Event, SystemError>.react({_ in loadCategories()}, when: { $0.shouldLoadData})]
         
         
-        let userAction = UserAction<State, Event, SystemError>()
+        let userAction = UserAction<State, Event, SystemError>(from: Event.loadCategories)
         let system = System.pure(
             initialState: initialState,
             context: context,
@@ -107,7 +106,6 @@ class ArchitectureKitTests: XCTestCase {
             expect.fulfill()
         }
         //Simulate user interaction - Tap button
-        userAction.event = Event.loadCategories
         userAction.execute()
         
         wait(for: [expect], timeout: 10.0)

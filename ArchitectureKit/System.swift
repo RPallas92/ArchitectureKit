@@ -24,14 +24,14 @@ public struct Feedback<State, Event, ErrorType> where ErrorType: Error{
 
 class System<State,Event,ErrorType> where ErrorType: Error {
     
-    var eventQueue = [AsyncResult<AppContext,Event, ErrorType>]()
+    var eventQueue = [Event]()
     var callback: (() -> ())? = nil
     
     var initialState: State
     var context: AppContext
     var reducer: (State, Event) -> State
     var uiBindings: [(State) -> ()]
-    var userActions: [UserAction<State, Event, ErrorType>]
+    var userActions: [UserAction<State,Event,ErrorType>]
     var feedback: [Feedback<State, Event, ErrorType>]
     var currentState: State
     
@@ -40,7 +40,7 @@ class System<State,Event,ErrorType> where ErrorType: Error {
         context: AppContext,
         reducer: @escaping (State, Event) -> State,
         uiBindings: [(State) -> ()],
-        userActions: [UserAction<State, Event, ErrorType>],
+        userActions: [UserAction<State,Event,ErrorType>],
         feedback: [Feedback<State, Event, ErrorType>]
         ) {
         
@@ -58,7 +58,7 @@ class System<State,Event,ErrorType> where ErrorType: Error {
         context: AppContext,
         reducer: @escaping (State, Event) -> State,
         uiBindings: [(State) -> ()],
-        userActions: [UserAction<State, Event, ErrorType>],
+        userActions: [UserAction<State,Event,ErrorType>],
         feedback: [Feedback<State, Event, ErrorType>]
         ) -> System {
         return System<State,Event,ErrorType>(initialState: initialState, context: context, reducer: reducer, uiBindings: uiBindings, userActions: userActions, feedback: feedback)
@@ -68,25 +68,25 @@ class System<State,Event,ErrorType> where ErrorType: Error {
         
         self.callback = callback
         self.userActions.forEach { action in
-            action.addListener(system: self)
+            action.addListener(listener: self)
         }
     }
     
     func run() {
         self.userActions.forEach { action in
-            action.addListener(system: self)
+            action.addListener(listener: self)
         }
     }
     
     var actionExecuting = false
     
-    func onUserAction(_ eventAsyncResult: AsyncResult<AppContext,Event, ErrorType>) {
+    func onUserAction(_ action: Event) {
         assert(Thread.isMainThread)
         if(actionExecuting){
-            self.eventQueue.append(eventAsyncResult)
+            self.eventQueue.append(action)
         } else {
             actionExecuting = true
-            doLoop(eventAsyncResult)
+            doLoop(action)
                 //IMPURE PART: EXECUTE SIDE EFFECTS
                 .runT(self.context, { stateResult in
                     assert(Thread.isMainThread, "ArchitectureKit: Final callback must be run on main thread")
@@ -102,8 +102,8 @@ class System<State,Event,ErrorType> where ErrorType: Error {
         }
     }
     
-    private func doLoop(_ eventResult: AsyncResult<AppContext, Event, ErrorType>) -> AsyncResult<AppContext, Void, ErrorType> {
-        return eventResult
+    private func doLoop(_ event: Event) -> AsyncResult<AppContext, Void, ErrorType> {
+        return AsyncResult<AppContext, Event, ErrorType>.pureTT(event)
             .mapTT { event in
                 self.reducer(self.currentState, event)
             }

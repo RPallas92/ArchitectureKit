@@ -7,25 +7,27 @@
 //
 
 import Foundation
+import FunctionalKit
 
-class UserAction<State, Event, ErrorType> where ErrorType: Error {
-    var listeners = [System<State, Event,ErrorType>]()
-    var event: Event?
+
+class UserAction<State,Event,ErrorType> where ErrorType: Error {
+    var listeners = [System<State, Event, ErrorType>]()
+    var event: Event
     
-    init() {}
+    init(from event: Event) {
+        self.event = event
+    }
     
     func execute() {
-        if let event = self.event {
-            let action = AsyncResult<AppContext, Event, ErrorType>.pureTT(event)
-            notify(action)
-        }
+        let action = self.event
+        notify(action)
+    }
+
+    func addListener(listener: System<State, Event, ErrorType>) {
+        listeners.append(listener)
     }
     
-    func addListener(system: System<State, Event, ErrorType>) {
-        listeners.append(system)
-    }
-    
-    func notify(_ action: AsyncResult<AppContext, Event, ErrorType>) {
+    func notify(_ action: Event) {
         listeners.forEach { system in
             system.onUserAction(action)
         }
