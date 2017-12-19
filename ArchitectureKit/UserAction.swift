@@ -10,8 +10,8 @@ import Foundation
 import FunctionalKit
 
 
-class UserAction<State,Event,ErrorType> where ErrorType: Error {
-    var listeners = [System<State, Event, ErrorType>]()
+class UserAction<State,Event,ErrorType, Context> where ErrorType: Error {
+    var listeners = [System<State, Event, ErrorType, Context>]()
     var event: Event
     
     init(from event: Event) {
@@ -23,7 +23,7 @@ class UserAction<State,Event,ErrorType> where ErrorType: Error {
         notify(action)
     }
 
-    func addListener(listener: System<State, Event, ErrorType>) {
+    func addListener(listener: System<State, Event, ErrorType, Context>) {
         listeners.append(listener)
     }
     

@@ -33,7 +33,7 @@ enum Event {
     case categoriesLoaded(Result<SystemError, [String]>)
 }
 
-struct AnyContext: AppContext {
+struct AppContext {
     
 }
 
@@ -60,11 +60,13 @@ struct State {
 
 class ArchitectureKitTests: XCTestCase {
     
+    //TODO  CONTEXT
+
     func testArchitecture(){
         
         let expect = expectation(description: "testArchitecture")
         
-        let context = AnyContext()
+        let context = AppContext()
         let button = UIButton()
         
         func categoriesBinding(state: State) {
@@ -89,10 +91,10 @@ class ArchitectureKitTests: XCTestCase {
         
         let initialState = State.empty
         let uiBindings = [categoriesBinding, dummyBinding]
-        let feedback = [Feedback<State, Event, SystemError>.react({_ in loadCategories()}, when: { $0.shouldLoadData})]
+        let feedback = [Feedback<State, Event, SystemError, AppContext>.react({_ in loadCategories()}, when: { $0.shouldLoadData})]
         
         
-        let userAction = UserAction<State, Event, SystemError>(from: Event.loadCategories)
+        let userAction = UserAction<State, Event, SystemError, AppContext>(from: Event.loadCategories)
         let system = System.pure(
             initialState: initialState,
             context: context,
@@ -110,7 +112,5 @@ class ArchitectureKitTests: XCTestCase {
         
         wait(for: [expect], timeout: 10.0)
     }
-    
-    //TODO ERROR AND CONTEXT
     
 }
