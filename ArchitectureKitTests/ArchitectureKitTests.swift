@@ -33,8 +33,6 @@ struct AnyContext: AppContext {
     
 }
 
-
-
 struct State {
     var categories: [String]
     var shouldLoadData = false
@@ -109,5 +107,7 @@ class ArchitectureKitTests: XCTestCase {
         
         wait(for: [expect], timeout: 10.0)
     }
+    
+    //TODO ERROR AND CONTEXT
     
 }
