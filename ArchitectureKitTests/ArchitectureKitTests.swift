@@ -24,6 +24,11 @@ fileprivate func runInBackground(_ asyncCode: @escaping(@escaping Completable)->
     }
 }
 
+enum SystemError: Error {
+    case genericError
+}
+
+
 enum Event {
     case loadCategories
     case categoriesLoaded(Result<SystemError, [String]>)
@@ -71,9 +76,9 @@ class ArchitectureKitTests: XCTestCase {
             print("Dummy binding")
         }
         
-        func loadCategories() -> AsyncResult<AppContext, Event> {
+        func loadCategories() -> AsyncResult<AppContext, Event, SystemError> {
             let categories = ["dev"]
-            return AsyncResult<AppContext, Event>.unfoldTT { _, continuation in
+            return AsyncResult<AppContext, Event, SystemError>.unfoldTT { _, continuation in
                 runInBackground { runInUI in
                     let result = Result<SystemError, Event>.success(Event.categoriesLoaded(Result.success(categories)))
                     runInUI {
@@ -85,10 +90,10 @@ class ArchitectureKitTests: XCTestCase {
         
         let initialState = State.empty
         let uiBindings = [categoriesBinding, dummyBinding]
-        let feedback = [Feedback<State, Event>.react({_ in loadCategories()}, when: { $0.shouldLoadData})]
+        let feedback = [Feedback<State, Event, SystemError>.react({_ in loadCategories()}, when: { $0.shouldLoadData})]
         
         
-        let userAction = UserAction<State, Event>()
+        let userAction = UserAction<State, Event, SystemError>()
         let system = System.pure(
             initialState: initialState,
             context: context,

@@ -25,23 +25,23 @@ extension PropertyStoring {
 
 
 extension UIButton: PropertyStoring {
-    
-    typealias T = UserAction<Any, Any>
+
+    typealias T = UserAction<Any, Any, NSError>
 
     private struct CustomProperties {
-        static var userAction = UserAction<Any, Any>()
+        static var userAction = UserAction<Any, Any, NSError>()
     }
     
-    var userAction: UserAction<Any, Any> {
+    var userAction: UserAction<Any, Any, NSError> {
         get {
             return getAssociatedObject(&CustomProperties.userAction, defaultValue: CustomProperties.userAction)
         }
     }
 
-    func onTap<State,Event>(trigger event: Event.Type) -> UserAction<State,Event> {
+    func onTap<State,Event,ErrorType>(trigger event: Event.Type) -> UserAction<State,Event,ErrorType> where ErrorType: Error {
         addTarget(self, action: #selector(UIButton.onButtonTapped), for: .touchUpInside)
         userAction.event = event
-        return userAction as! UserAction<State, Event>
+        return userAction as! UserAction<State, Event, ErrorType>
     }
     
     @objc private func onButtonTapped() {
