@@ -13,7 +13,7 @@ protocol AppContext {
     
 }
 
-public struct Feedback {
+public struct Feedback<State, Event> {
     var condition: (State) -> (Bool)
     var action: (State) -> AsyncResult<AppContext, Event>
     
@@ -22,8 +22,7 @@ public struct Feedback {
     }
 }
 
-class System {
-    static var doNothing = AsyncResult<AppContext,Event>.pureTT(Event.doNothing)
+class System<State,Event> {
     
     var eventQueue = [AsyncResult<AppContext,Event>]()
     var callback: (() -> ())? = nil
@@ -32,18 +31,17 @@ class System {
     var context: AppContext
     var reducer: (State, Event) -> State
     var uiBindings: [(State) -> ()]
-    var userActions: [UserAction]
-    var feedback: [Feedback]
+    var userActions: [UserAction<State, Event>]
+    var feedback: [Feedback<State, Event>]
     var currentState: State
-    
     
     private init(
         initialState: State,
         context: AppContext,
         reducer: @escaping (State, Event) -> State,
         uiBindings: [(State) -> ()],
-        userActions: [UserAction],
-        feedback: [Feedback]
+        userActions: [UserAction<State, Event>],
+        feedback: [Feedback<State, Event>]
         ) {
         
         self.initialState = initialState
@@ -54,15 +52,16 @@ class System {
         self.feedback = feedback
         self.currentState = initialState
     }
+    
     static func pure(
         initialState: State,
         context: AppContext,
         reducer: @escaping (State, Event) -> State,
         uiBindings: [(State) -> ()],
-        userActions: [UserAction],
-        feedback: [Feedback]
+        userActions: [UserAction<State, Event>],
+        feedback: [Feedback<State, Event>]
         ) -> System {
-        return System(initialState: initialState, context: context, reducer: reducer, uiBindings: uiBindings, userActions: userActions, feedback: feedback)
+        return System<State,Event>(initialState: initialState, context: context, reducer: reducer, uiBindings: uiBindings, userActions: userActions, feedback: feedback)
     }
     
     func run(callback: @escaping ()->()){
@@ -106,7 +105,7 @@ class System {
     private func doLoop(_ eventResult: AsyncResult<AppContext, Event>) -> AsyncResult<AppContext, Void> {
         return eventResult
             .mapTT { event in
-                State.reduce(state: self.currentState, event: event) //todo current state
+                self.reducer(self.currentState, event)
             }
             .flatMapTT { state in
                 self.getStateAfterFeedback(from: state)
@@ -117,37 +116,57 @@ class System {
             }
             .flatMapTT { state in
                 self.bindUI(state)
-            }
+        }
     }
-
+    
     private func getStateAfterFeedback(from state: State) -> AsyncResult<AppContext, State> {
         let arrayOfAsyncFeedbacks = self.feedback.map { feedback in
             return AsyncResult<AppContext, Feedback>.pureTT(feedback)
         }
         
-        let emptyFeedback = Feedback(condition: { _ in true }, action: { _ in AsyncResult<AppContext, Event>.pureTT(Event.doNothing)})
-        let computedAsyncFeedbackResult = arrayOfAsyncFeedbacks.reduce(
-            AsyncResult<AppContext, (Feedback, State)>.pureTT((emptyFeedback, state)),
-            { (previousFeedbackAndState, feedbackObj) -> (AsyncResult<AppContext, (Feedback,State)>) in
-                
-                previousFeedbackAndState.flatMapTT { (_, state) -> AsyncResult<AppContext, (Feedback,State)> in
-                    feedbackObj.flatMapTT { feedback -> AsyncResult<AppContext, (Feedback,State)> in
-                        if(feedback.condition(state)){
-                            return feedback.action(state).flatMapTT { newEvent -> AsyncResult<AppContext, (Feedback,State)> in
-                                let newState = State.reduce(state: state, event: newEvent)
-                                return AsyncResult<AppContext, (Feedback,State)>.pureTT((feedback, newState))
-                            }
-                        } else {
-                            return AsyncResult<AppContext, (Feedback,State)>.pureTT((feedback, state))
-                        }
+        if let firstFeedback = self.feedback.first {
+            if(self.feedback.count == 1) {
+                if(firstFeedback.condition(state)){
+                    return firstFeedback.action(state).flatMapTT { newEvent -> AsyncResult<AppContext,State> in
+                        let newState = self.reducer(state,newEvent)
+                        return AsyncResult<AppContext, State>.pureTT(newState)
                     }
+                } else {
+                    return AsyncResult<AppContext, State>.pureTT(state)
                 }
-        })
-        return computedAsyncFeedbackResult.mapTT { (feedback,state) in
-            return state
+                
+            } else {
+                let tail = arrayOfAsyncFeedbacks[1..<arrayOfAsyncFeedbacks.count]
+                
+                let initialValue = AsyncResult<AppContext, (Feedback, State)>.pureTT((firstFeedback, state))
+                
+                let computedAsyncFeedbackResult = tail.reduce(
+                    initialValue,
+                    { (previousFeedbackAndState, feedbackObj) -> (AsyncResult<AppContext, (Feedback<State,Event>,State)>) in
+                        previousFeedbackAndState.flatMapTT { (_, state) -> AsyncResult<AppContext, (Feedback<State,Event>,State)> in
+                            feedbackObj.flatMapTT { feedback -> AsyncResult<AppContext, (Feedback<State,Event>,State)> in
+                                if(feedback.condition(state)){
+                                    return feedback.action(state).flatMapTT { newEvent -> AsyncResult<AppContext, (Feedback<State,Event>,State)> in
+                                        let newState = self.reducer(state,newEvent)
+                                        return AsyncResult<AppContext, (Feedback<State,Event>,State)>.pureTT((feedback, newState))
+                                    }
+                                } else {
+                                    return AsyncResult<AppContext, (Feedback<State,Event>,State)>.pureTT((feedback, state))
+                                }
+                            }
+                        }
+                })
+                return computedAsyncFeedbackResult.mapTT { (feedback,state) in
+                    return state
+                }
+            }
+
+            
+        } else {
+            return AsyncResult<AppContext, State>.pureTT(state)
         }
     }
-
+    
     private func bindUI(_ state: State) -> AsyncResult<AppContext, Void> {
         return AsyncResult<AppContext, Void>.unfoldTT { context, continuation in
             self.uiBindings.forEach { uiBinding in
@@ -157,3 +176,4 @@ class System {
         }
     }
 }
+

@@ -26,25 +26,25 @@ extension PropertyStoring {
 
 extension UIButton: PropertyStoring {
     
-    typealias T = UserAction
+    typealias T = UserAction<Any, Any>
 
     private struct CustomProperties {
-        static var userAction = UserAction()
+        static var userAction = UserAction<Any, Any>()
     }
     
-    var userAction: UserAction {
+    var userAction: UserAction<Any, Any> {
         get {
             return getAssociatedObject(&CustomProperties.userAction, defaultValue: CustomProperties.userAction)
         }
     }
 
-    func onTap(trigger event: Event) -> UserAction {
+    func onTap<State,Event>(trigger event: Event.Type) -> UserAction<State,Event> {
         addTarget(self, action: #selector(UIButton.onButtonTapped), for: .touchUpInside)
         userAction.event = event
-        return userAction
+        return userAction as! UserAction<State, Event>
     }
     
     @objc private func onButtonTapped() {
-        self.userAction.execute(value: 1)
+        self.userAction.execute()
     }
 }

@@ -9,8 +9,8 @@
 import Foundation
 import FunctionalKit
 
-enum Event {
+/*enum Event {
     case loadCategories
     case categoriesLoaded(Result<SystemError, [String]>)
     case doNothing //TODO
-}
+}*/

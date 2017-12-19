@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct State {
+/*struct State {
     var categories: [String]
     var shouldLoadData = false
     
@@ -29,4 +29,4 @@ struct State {
             return state
         }
     }
-}
+}*/

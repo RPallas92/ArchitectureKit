@@ -8,19 +8,20 @@
 
 import Foundation
 
-class UserAction {
-    let asyncResult = AsyncResult<AppContext, Event>.pureTT(Event.loadCategories)
-    var listeners = [System]()
-    var event = Event.doNothing
+class UserAction<State, Event> {
+    var listeners = [System<State, Event>]()
+    var event: Event?
     
     init() {}
     
-    func execute(value: Int) {
-        let action = AsyncResult<AppContext, Event>.pureTT(event)
-        notify(action)
+    func execute() {
+        if let event = self.event {
+            let action = AsyncResult<AppContext, Event>.pureTT(event)
+            notify(action)
+        }
     }
     
-    func addListener(system: System) {
+    func addListener(system: System<State, Event>) {
         listeners.append(system)
     }
     
