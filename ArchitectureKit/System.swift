@@ -20,6 +20,9 @@ public struct Feedback<State, Event, ErrorType, Context> where ErrorType: Error{
 
 class System<State,Event,ErrorType,Context> where ErrorType: Error {
     
+    typealias SystemUserAction = UserAction<State,Event,ErrorType,Context>
+    typealias SystemFeedback = Feedback<State, Event, ErrorType, Context>
+    
     var eventQueue = [Event]()
     var callback: (() -> ())? = nil
     
@@ -27,8 +30,8 @@ class System<State,Event,ErrorType,Context> where ErrorType: Error {
     var context: Context
     var reducer: (State, Event) -> State
     var uiBindings: [(State) -> ()]
-    var userActions: [UserAction<State,Event,ErrorType,Context>]
-    var feedback: [Feedback<State, Event, ErrorType, Context>]
+    var userActions: [SystemUserAction]
+    var feedback: [SystemFeedback]
     var currentState: State
     
     private init(
@@ -36,8 +39,8 @@ class System<State,Event,ErrorType,Context> where ErrorType: Error {
         context: Context,
         reducer: @escaping (State, Event) -> State,
         uiBindings: [(State) -> ()],
-        userActions: [UserAction<State,Event,ErrorType,Context>],
-        feedback: [Feedback<State, Event, ErrorType, Context>]
+        userActions: [SystemUserAction],
+        feedback: [SystemFeedback]
         ) {
         
         self.initialState = initialState
@@ -54,8 +57,8 @@ class System<State,Event,ErrorType,Context> where ErrorType: Error {
         context: Context,
         reducer: @escaping (State, Event) -> State,
         uiBindings: [(State) -> ()],
-        userActions: [UserAction<State,Event,ErrorType,Context>],
-        feedback: [Feedback<State, Event, ErrorType, Context>]
+        userActions: [SystemUserAction],
+        feedback: [SystemFeedback]
         ) -> System {
         return System<State,Event,ErrorType, Context>(initialState: initialState, context: context, reducer: reducer, uiBindings: uiBindings, userActions: userActions, feedback: feedback)
     }
@@ -82,19 +85,17 @@ class System<State,Event,ErrorType,Context> where ErrorType: Error {
             self.eventQueue.append(action)
         } else {
             actionExecuting = true
-            doLoop(action)
-                //IMPURE PART: EXECUTE SIDE EFFECTS
-                .runT(self.context, { stateResult in
-                    assert(Thread.isMainThread, "ArchitectureKit: Final callback must be run on main thread")
-                    if let callback = self.callback {
-                        callback()
-                        self.actionExecuting = false
-                        if let nextEventAsyncResult = self.eventQueue.first {
-                            self.eventQueue.removeFirst()
-                            self.onUserAction(nextEventAsyncResult)
-                        }
+            doLoop(action).runT(self.context, { stateResult in
+                assert(Thread.isMainThread, "ArchitectureKit: Final callback must be run on main thread")
+                if let callback = self.callback {
+                    callback()
+                    self.actionExecuting = false
+                    if let nextEvent = self.eventQueue.first {
+                        self.eventQueue.removeFirst()
+                        self.onUserAction(nextEvent)
                     }
-                })
+                }
+            })
         }
     }
     
