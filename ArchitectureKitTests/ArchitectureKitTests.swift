@@ -104,9 +104,10 @@ class ArchitectureKitTests: XCTestCase {
             feedback: feedback
         )
         
-        system.run {
+        system.addLoopCallback {
             expect.fulfill()
         }
+        
         //Simulate user interaction - Tap button
         userAction.execute()
         

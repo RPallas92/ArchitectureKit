@@ -69,6 +69,10 @@ class System<State,Event,ErrorType,Context> where ErrorType: Error {
         self.userActions = userActions
         self.feedback = feedback
         self.currentState = initialState
+        
+        self.userActions.forEach { action in
+            action.addListener(listener: self)
+        }
     }
     
     static func pure(
@@ -82,18 +86,8 @@ class System<State,Event,ErrorType,Context> where ErrorType: Error {
         return System<State,Event,ErrorType, Context>(initialState: initialState, context: context, reducer: reducer, uiBindings: uiBindings, userActions: userActions, feedback: feedback)
     }
     
-    func run(callback: @escaping ()->()){
-        
+    func addLoopCallback(callback: @escaping ()->()){
         self.callback = callback
-        self.userActions.forEach { action in
-            action.addListener(listener: self)
-        }
-    }
-    
-    func run() {
-        self.userActions.forEach { action in
-            action.addListener(listener: self)
-        }
     }
     
     var actionExecuting = false
