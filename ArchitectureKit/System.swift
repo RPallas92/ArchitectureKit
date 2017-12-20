@@ -31,7 +31,7 @@ public struct Feedback<State, Event, ErrorType, Context> where ErrorType: Error{
     }
 }
 
-class System<State,Event,ErrorType,Context> where ErrorType: Error {
+public class System<State,Event,ErrorType,Context> where ErrorType: Error {
     
     typealias SystemUserAction = UserAction<State,Event,ErrorType,Context>
     typealias SystemFeedback = Feedback<State, Event, ErrorType, Context>
@@ -86,7 +86,7 @@ class System<State,Event,ErrorType,Context> where ErrorType: Error {
         return System<State,Event,ErrorType, Context>(initialState: initialState, context: context, reducer: reducer, uiBindings: uiBindings, userActions: userActions, feedback: feedback)
     }
     
-    func addLoopCallback(callback: @escaping ()->()){
+    public func addLoopCallback(callback: @escaping ()->()){
         self.callback = callback
     }
     

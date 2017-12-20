@@ -8,9 +8,9 @@
 
 import FunctionalKit
 
-typealias AsyncResult<E,A,Err> = Reader<E, Future<Result<Err, A>>> where Err: Error
+public typealias AsyncResult<E,A,Err> = Reader<E, Future<Result<Err, A>>> where Err: Error
 
-extension AsyncResult where ParameterType: FutureType, ParameterType.ParameterType: ResultType {
+public extension AsyncResult where ParameterType: FutureType, ParameterType.ParameterType: ResultType {
     
     typealias ValueType = ParameterType.ParameterType.ParameterType
     typealias ErrorType = ParameterType.ParameterType.ErrorType

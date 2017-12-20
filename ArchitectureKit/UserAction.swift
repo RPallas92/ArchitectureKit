@@ -11,7 +11,7 @@ import FunctionalKit
 
 // TODO: UIButtonUserAction(uiButtonInstance).onTap
 
-class UserAction<State,Event,ErrorType, Context> where ErrorType: Error {
+public class UserAction<State,Event,ErrorType, Context> where ErrorType: Error {
     var listeners = [System<State, Event, ErrorType, Context>]()
     var event: Event
     
