@@ -1,5 +1,5 @@
 # ArchitectureKit
-
+[![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage) ![platforms](https://img.shields.io/badge/platforms-iOS%20%7C%20macOS%20%7C%20tvOS%20%7C%20watchOS%20%7C%20Linux-333333.svg)
 
 The simplest architecture for [FunctionalKit](https://github.com/facile-it/FunctionalKit)  
   Inspired by [RxFeedback](https://github.com/NoTests/RxFeedback.swift), but it uses Monads (from FunctionalKit) instead of RxSwift, and allows dependency injection out of the box,
