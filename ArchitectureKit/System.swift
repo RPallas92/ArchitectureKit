@@ -16,7 +16,7 @@ public struct Feedback<State, Event, ErrorType, Context> where ErrorType: Error{
     var condition: (State) -> (Bool)
     var action: (State) -> AsyncResult<Context, Event, ErrorType>
     
-    static func react(_ action: @escaping (State) -> AsyncResult<Context, Event, ErrorType>, when condition: @escaping (State) -> (Bool)) -> Feedback {
+    public static func react(_ action: @escaping (State) -> AsyncResult<Context, Event, ErrorType>, when condition: @escaping (State) -> (Bool)) -> Feedback {
         return Feedback(condition: condition, action: action)
     }
     
