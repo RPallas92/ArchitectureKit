@@ -116,12 +116,14 @@ public class System<State,Event,ErrorType,Context> where ErrorType: Error {
     }
     
     private func doLoop(_ event: Event) -> VoidAsyncResult {
+        let maxFeedbackLoops = 5
+
         return AsyncResult<Context, Event, ErrorType>.pureTT(event)
             .mapTT { event in
                 self.reducer(self.currentState, event)
             }
             .flatMapTT { state in
-                self.getStateAfterAllFeedback(from: state)
+                self.getStateAfterAllFeedback(from: state, maxFeedbackLoops: maxFeedbackLoops)
             }
             .mapTT { state in
                 self.currentState = state
@@ -132,26 +134,43 @@ public class System<State,Event,ErrorType,Context> where ErrorType: Error {
         }
     }
     
-    private func getStateAfterAllFeedback(from state: State) -> StateAsyncResult {
-        if let firstFeedback = self.feedback.first {
-                let initialValue = FeedbackStateAsyncResult.pureTT((firstFeedback, state))
+    private func getStateAfterAllFeedback(from state: State, maxFeedbackLoops: Int) -> StateAsyncResult {
+        if (self.feedback.count > 0 && maxFeedbackLoops > 0) {
+        
+            let computedStateFeedback = runFeedback(from: state)
+            return computedStateFeedback.flatMapTT { arg  -> StateAsyncResult in
                 
-                let computedAsyncFeedbackResult = self.feedback.reduce(
-                    initialValue,
-                    { (previousFeedbackAndState, feedback) -> FeedbackStateAsyncResult in
-                        previousFeedbackAndState.flatMapTT { (_, state) -> FeedbackStateAsyncResult in
-                            feedback.getStateAfterFeedback(from: state, with: self.reducer)
-                                .mapTT { newState in
-                                    (feedback, newState)
-                            }
-                        }
+                let (_ ,newState) = arg
+                
+                let anyFeedbackElse = self.feedback.reduce(false, { (otherLoopRequired, feedback) -> Bool in
+                    otherLoopRequired || feedback.condition(newState)
                 })
-                return computedAsyncFeedbackResult.mapTT { (feedback,state) in
-                    return state
+                
+                if(anyFeedbackElse){
+                    return self.getStateAfterAllFeedback(from: newState, maxFeedbackLoops: maxFeedbackLoops - 1)
+                } else {
+                    return StateAsyncResult.pureTT(newState)
                 }
+            }
         } else {
             return StateAsyncResult.pureTT(state)
         }
+    }
+    
+    private func runFeedback(from state:State) -> FeedbackStateAsyncResult {
+        let firstFeedback = self.feedback.first!
+        let initialValue = FeedbackStateAsyncResult.pureTT((firstFeedback, state))
+
+        return self.feedback.reduce(
+            initialValue,
+            { (previousFeedbackAndState, feedback) -> FeedbackStateAsyncResult in
+                previousFeedbackAndState.flatMapTT { (_, state) -> FeedbackStateAsyncResult in
+                    feedback.getStateAfterFeedback(from: state, with: self.reducer)
+                        .mapTT { newState in
+                            (feedback, newState)
+                    }
+                }
+        })
     }
     
     private func bindUI(_ state: State) -> VoidAsyncResult {

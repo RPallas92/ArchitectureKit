@@ -89,10 +89,12 @@ class ArchitectureKitTests: XCTestCase {
         
         let initialState = State.empty
         let uiBindings = [categoriesBinding, dummyBinding]
-        let feedback = [Feedback<State, Event, SystemError, AppContext>.react({_ in loadCategories()}, when: { $0.shouldLoadData})]
+        let feedback = [
+            Feedback<State, Event, SystemError, AppContext>.react({_ in loadCategories()}, when: { $0.shouldLoadData})
+        ]
         
         
-        let userAction = UserAction<State, Event, SystemError, AppContext>(from: Event.loadCategories)
+        let userAction = UserAction<State, Event, SystemError, AppContext>(trigger: Event.loadCategories)
         let system = System.pure(
             initialState: initialState,
             context: context,
