@@ -2,7 +2,7 @@
 
 
 The simplest architecture for [FunctionalKit](https://github.com/facile-it/FunctionalKit)  
-  Inspired by [RxFeedback](https://github.com/NoTests/RxFeedback.swift), but it uses Monads (from FunctionalKit) instead of RxSwift
+  Inspired by [RxFeedback](https://github.com/NoTests/RxFeedback.swift), but it uses Monads (from FunctionalKit) instead of RxSwift, and allows dependency injection out of the box,
 
 <img src="https://github.com/kzaher/rxswiftcontent/raw/master/RxFeedback.png" width="502px" />
 
