@@ -39,6 +39,8 @@ class System<State,Event,ErrorType,Context> where ErrorType: Error {
     typealias StateAsyncResult = AsyncResult<Context, State, ErrorType>
     typealias EventAsyncResult = AsyncResult<Context, Event, ErrorType>
     typealias FeedbackAsyncResult = AsyncResult<Context, SystemFeedback, ErrorType>
+    typealias FeedbackStateAsyncResult = AsyncResult<Context,(SystemFeedback,State),ErrorType>
+
     
     var eventQueue = [Event]()
     var callback: (() -> ())? = nil
@@ -122,7 +124,7 @@ class System<State,Event,ErrorType,Context> where ErrorType: Error {
                 self.reducer(self.currentState, event)
             }
             .flatMapTT { state in
-                self.getStateAfterFeedback(from: state)
+                self.getStateAfterAllFeedback(from: state)
             }
             .mapTT { state in
                 self.currentState = state
@@ -133,39 +135,25 @@ class System<State,Event,ErrorType,Context> where ErrorType: Error {
         }
     }
     
-    private func getStateAfterFeedback(from state: State) -> StateAsyncResult {
-        
-        typealias FeedbackStateAsyncResult = AsyncResult<Context,(SystemFeedback,State),ErrorType>
-        
-        let asyncFeedbacks = self.feedback.map { feedback in
-            return FeedbackAsyncResult.pureTT(feedback)
-        }
-        
+    private func getStateAfterAllFeedback(from state: State) -> StateAsyncResult {
         
         if let firstFeedback = self.feedback.first {
-            if(self.feedback.count == 1) {
-                return firstFeedback.getStateAfterFeedback(from: state, with: self.reducer)
-            } else {
-                let tail = asyncFeedbacks[1..<asyncFeedbacks.count]
-                
+            
                 let initialValue = FeedbackStateAsyncResult.pureTT((firstFeedback, state))
                 
-                let computedAsyncFeedbackResult = tail.reduce(
+                let computedAsyncFeedbackResult = self.feedback.reduce(
                     initialValue,
-                    { (previousFeedbackAndState, feedbackObj) -> FeedbackStateAsyncResult in
+                    { (previousFeedbackAndState, feedback) -> FeedbackStateAsyncResult in
                         previousFeedbackAndState.flatMapTT { (_, state) -> FeedbackStateAsyncResult in
-                            feedbackObj.flatMapTT { feedback -> FeedbackStateAsyncResult in
-                                feedback.getStateAfterFeedback(from: state, with: self.reducer)
-                                    .mapTT { newState in
-                                        (feedback, newState)
-                                    }
+                            feedback.getStateAfterFeedback(from: state, with: self.reducer)
+                                .mapTT { newState in
+                                    (feedback, newState)
                             }
                         }
                 })
                 return computedAsyncFeedbackResult.mapTT { (feedback,state) in
                     return state
                 }
-            }
         } else {
             return StateAsyncResult.pureTT(state)
         }
