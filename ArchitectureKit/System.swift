@@ -136,9 +136,7 @@ class System<State,Event,ErrorType,Context> where ErrorType: Error {
     }
     
     private func getStateAfterAllFeedback(from state: State) -> StateAsyncResult {
-        
         if let firstFeedback = self.feedback.first {
-            
                 let initialValue = FeedbackStateAsyncResult.pureTT((firstFeedback, state))
                 
                 let computedAsyncFeedbackResult = self.feedback.reduce(
