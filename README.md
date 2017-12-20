@@ -17,7 +17,21 @@ The simplest architecture for [FunctionalKit](https://github.com/facile-it/Funct
         ) -> System {
 ```
 
-# Why
+# Motivation
+This architectural approach, fits on the View layer of Clean Architecture.  
+It is an alternative to Model-View-Presenter or Model-View-ViewModel, and it is strongly inspired by Redux.
+
+The idea is to constrain the changes to view state in order to enforce correctness. Changes to state are explicity documented by Events and a reducer (pure) function. This approach also allows testing presentation logic with easy (it also includes a mechanism to inject dependencies, such views, API Clients, etc.)
+
+
+
+# Installation 
+
+# Quick example
+The purpose of this example is explain how to use FunctionalKit
+
+
+# Rule of thumb
 
 * Straightforward
     * if it's state -> State
@@ -40,3 +54,25 @@ The simplest architecture for [FunctionalKit](https://github.com/facile-it/Funct
 * Can model circular dependencies
 * Completely separates business logic from effects.
     * Business logic can be transpiled between platforms (ShiftJS, C++, J2ObjC)
+
+#License
+
+```
+Copyright 2017 - 2018 Ricardo Pallás Román
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+```
+
+#Author
+[Ricardo Pallás](https://www.linkedin.com/in/rpallas/)
