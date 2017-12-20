@@ -15,11 +15,11 @@ public class UserAction<State,Event,ErrorType, Context> where ErrorType: Error {
     var listeners = [System<State, Event, ErrorType, Context>]()
     var event: Event
     
-    init(from event: Event) {
+    public init(from event: Event) {
         self.event = event
     }
     
-    func execute() {
+    public func execute() {
         let action = self.event
         notify(action)
     }
