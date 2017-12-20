@@ -33,6 +33,9 @@ public struct Feedback<State, Event, ErrorType, Context> where ErrorType: Error{
 
 public class System<State,Event,ErrorType,Context> where ErrorType: Error {
     
+    //TODO don't call UI if State is the same
+    //TODO feedback that triggers other feedback
+    
     typealias SystemUserAction = UserAction<State,Event,ErrorType,Context>
     typealias SystemFeedback = Feedback<State, Event, ErrorType, Context>
     typealias VoidAsyncResult = AsyncResult<Context, Void, ErrorType>

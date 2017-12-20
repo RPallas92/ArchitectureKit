@@ -60,8 +60,6 @@ struct State {
 
 class ArchitectureKitTests: XCTestCase {
     
-    //TODO  CONTEXT
-
     func testArchitecture(){
         
         let expect = expectation(description: "testArchitecture")
