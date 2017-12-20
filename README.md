@@ -17,7 +17,7 @@ The simplest architecture for [FunctionalKit](https://github.com/facile-it/Funct
         ) -> System {
 ```
 
-# Motivation
+## Motivation
 This architectural approach, fits on the View layer of Clean Architecture.  
 It is an alternative to Model-View-Presenter or Model-View-ViewModel, and it is strongly inspired by Redux.
 
@@ -25,13 +25,29 @@ The idea is to constrain the changes to view state in order to enforce correctne
 
 
 
-# Installation 
+## Installation
+ArchitectureKit only contains FunctionalKit dependency
 
-# Quick example
+These are currently the supported options:
+
+### [Carthage](https://github.com/Carthage/Carthage)
+
+Add this to `Cartfile`
+
+```
+github "RPallas92/ArchitectureKit" "master"
+```
+
+```bash
+$ carthage update
+```
+
+
+## Quick example
 The purpose of this example is explain how to use FunctionalKit
 
 
-# Rule of thumb
+## Rule of thumb
 
 * Straightforward
     * if it's state -> State
@@ -55,7 +71,7 @@ The purpose of this example is explain how to use FunctionalKit
 * Completely separates business logic from effects.
     * Business logic can be transpiled between platforms (ShiftJS, C++, J2ObjC)
 
-# License
+## License
 
 ```
 Copyright 2017 - 2018 Ricardo Pallás Román
@@ -74,5 +90,5 @@ limitations under the License.
 
 ```
 
-# Author
+## Author
 [Ricardo Pallás](https://www.linkedin.com/in/rpallas/)
