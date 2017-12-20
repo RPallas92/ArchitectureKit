@@ -75,13 +75,13 @@ public class System<State,Event,ErrorType,Context> where ErrorType: Error {
         }
     }
     
-    static func pure(
+    public static func pure(
         initialState: State,
         context: Context,
         reducer: @escaping (State, Event) -> State,
         uiBindings: [(State) -> ()],
-        userActions: [SystemUserAction],
-        feedback: [SystemFeedback]
+        userActions: [UserAction<State,Event,ErrorType,Context>],
+        feedback: [Feedback<State, Event, ErrorType, Context>]
         ) -> System {
         return System<State,Event,ErrorType, Context>(initialState: initialState, context: context, reducer: reducer, uiBindings: uiBindings, userActions: userActions, feedback: feedback)
     }
