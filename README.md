@@ -55,7 +55,7 @@ The purpose of this example is explain how to use FunctionalKit
 * Completely separates business logic from effects.
     * Business logic can be transpiled between platforms (ShiftJS, C++, J2ObjC)
 
-#License
+# License
 
 ```
 Copyright 2017 - 2018 Ricardo Pallás Román
@@ -74,5 +74,5 @@ limitations under the License.
 
 ```
 
-#Author
+# Author
 [Ricardo Pallás](https://www.linkedin.com/in/rpallas/)
