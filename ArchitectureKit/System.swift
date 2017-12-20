@@ -10,11 +10,24 @@ import Foundation
 import FunctionalKit
 
 public struct Feedback<State, Event, ErrorType, Context> where ErrorType: Error{
+    
+    typealias StateAsyncResult = AsyncResult<Context, State, ErrorType>
+
     var condition: (State) -> (Bool)
     var action: (State) -> AsyncResult<Context, Event, ErrorType>
     
     static func react(_ action: @escaping (State) -> AsyncResult<Context, Event, ErrorType>, when condition: @escaping (State) -> (Bool)) -> Feedback {
         return Feedback(condition: condition, action: action)
+    }
+    
+    func getStateAfterFeedback(from state:State, with reducer:@escaping ((State, Event) -> State)) -> StateAsyncResult {
+        if(self.condition(state)){
+            return self.action(state).mapTT { newEvent in
+                reducer(state,newEvent)
+            }
+        } else {
+            return StateAsyncResult.pureTT(state)
+        }
     }
 }
 
@@ -22,6 +35,10 @@ class System<State,Event,ErrorType,Context> where ErrorType: Error {
     
     typealias SystemUserAction = UserAction<State,Event,ErrorType,Context>
     typealias SystemFeedback = Feedback<State, Event, ErrorType, Context>
+    typealias VoidAsyncResult = AsyncResult<Context, Void, ErrorType>
+    typealias StateAsyncResult = AsyncResult<Context, State, ErrorType>
+    typealias EventAsyncResult = AsyncResult<Context, Event, ErrorType>
+    typealias FeedbackAsyncResult = AsyncResult<Context, SystemFeedback, ErrorType>
     
     var eventQueue = [Event]()
     var callback: (() -> ())? = nil
@@ -99,7 +116,7 @@ class System<State,Event,ErrorType,Context> where ErrorType: Error {
         }
     }
     
-    private func doLoop(_ event: Event) -> AsyncResult<Context, Void, ErrorType> {
+    private func doLoop(_ event: Event) -> VoidAsyncResult {
         return AsyncResult<Context, Event, ErrorType>.pureTT(event)
             .mapTT { event in
                 self.reducer(self.currentState, event)
@@ -116,40 +133,32 @@ class System<State,Event,ErrorType,Context> where ErrorType: Error {
         }
     }
     
-    private func getStateAfterFeedback(from state: State) -> AsyncResult<Context, State, ErrorType> {
-        let arrayOfAsyncFeedbacks = self.feedback.map { feedback in
-            return AsyncResult<Context, Feedback, ErrorType>.pureTT(feedback)
+    private func getStateAfterFeedback(from state: State) -> StateAsyncResult {
+        
+        typealias FeedbackStateAsyncResult = AsyncResult<Context,(SystemFeedback,State),ErrorType>
+        
+        let asyncFeedbacks = self.feedback.map { feedback in
+            return FeedbackAsyncResult.pureTT(feedback)
         }
+        
         
         if let firstFeedback = self.feedback.first {
             if(self.feedback.count == 1) {
-                if(firstFeedback.condition(state)){
-                    return firstFeedback.action(state).flatMapTT { newEvent -> AsyncResult<Context,State, ErrorType> in
-                        let newState = self.reducer(state,newEvent)
-                        return AsyncResult<Context, State, ErrorType>.pureTT(newState)
-                    }
-                } else {
-                    return AsyncResult<Context, State, ErrorType>.pureTT(state)
-                }
-                
+                return firstFeedback.getStateAfterFeedback(from: state, with: self.reducer)
             } else {
-                let tail = arrayOfAsyncFeedbacks[1..<arrayOfAsyncFeedbacks.count]
+                let tail = asyncFeedbacks[1..<asyncFeedbacks.count]
                 
-                let initialValue = AsyncResult<Context, (Feedback, State), ErrorType>.pureTT((firstFeedback, state))
+                let initialValue = FeedbackStateAsyncResult.pureTT((firstFeedback, state))
                 
                 let computedAsyncFeedbackResult = tail.reduce(
                     initialValue,
-                    { (previousFeedbackAndState, feedbackObj) -> (AsyncResult<Context, (Feedback<State,Event, ErrorType,Context>,State), ErrorType>) in
-                        previousFeedbackAndState.flatMapTT { (_, state) -> AsyncResult<Context, (Feedback<State,Event, ErrorType,Context>,State), ErrorType> in
-                            feedbackObj.flatMapTT { feedback -> AsyncResult<Context, (Feedback<State,Event,ErrorType,Context>,State), ErrorType> in
-                                if(feedback.condition(state)){
-                                    return feedback.action(state).flatMapTT { newEvent -> AsyncResult<Context,(Feedback<State,Event,ErrorType,Context>,State), ErrorType> in
-                                        let newState = self.reducer(state,newEvent)
-                                        return AsyncResult<Context, (Feedback<State,Event,ErrorType,Context>,State),ErrorType>.pureTT((feedback, newState))
+                    { (previousFeedbackAndState, feedbackObj) -> FeedbackStateAsyncResult in
+                        previousFeedbackAndState.flatMapTT { (_, state) -> FeedbackStateAsyncResult in
+                            feedbackObj.flatMapTT { feedback -> FeedbackStateAsyncResult in
+                                feedback.getStateAfterFeedback(from: state, with: self.reducer)
+                                    .mapTT { newState in
+                                        (feedback, newState)
                                     }
-                                } else {
-                                    return AsyncResult<Context, (Feedback<State,Event,ErrorType,Context>,State),ErrorType>.pureTT((feedback, state))
-                                }
                             }
                         }
                 })
@@ -157,15 +166,13 @@ class System<State,Event,ErrorType,Context> where ErrorType: Error {
                     return state
                 }
             }
-
-            
         } else {
-            return AsyncResult<Context, State, ErrorType>.pureTT(state)
+            return StateAsyncResult.pureTT(state)
         }
     }
     
-    private func bindUI(_ state: State) -> AsyncResult<Context, Void, ErrorType> {
-        return AsyncResult<Context,Void,ErrorType>.unfoldTT { context, continuation in
+    private func bindUI(_ state: State) -> VoidAsyncResult {
+        return VoidAsyncResult.unfoldTT { context, continuation in
             self.uiBindings.forEach { uiBinding in
                 uiBinding(state)
             }
@@ -173,4 +180,3 @@ class System<State,Event,ErrorType,Context> where ErrorType: Error {
         }
     }
 }
-
