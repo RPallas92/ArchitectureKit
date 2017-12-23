@@ -21,9 +21,7 @@ The simplest architecture for [FunctionalKit](https://github.com/facile-it/Funct
 This architectural approach, fits on the View layer of Clean Architecture.
 It is an alternative to Model-View-Presenter or Model-View-ViewModel, and it is strongly inspired by Redux.
 
-The idea is to constrain the changes to view state in order to enforce correctness. Changes to state are explicity documented by Events and a reducer (pure) function. This approach also allows testing presentation logic with easy (it also includes a mechanism to inject dependencies, such views, API Clients, etc.)
-
-
+The idea is to constrain the changes to view state in order to enforce correctness. Changes to state are explicity documented by Events and by a pure reducer function. This approach also allows testing presentation logic with ease (it also includes a mechanism to inject dependencies, such views, API Clients, etc.)
 
 ## Installation
 ArchitectureKit only contains FunctionalKit dependency
@@ -41,7 +39,6 @@ github "RPallas92/ArchitectureKit" "master"
 ```bash
 $ carthage update
 ```
-
 
 ## Quick example
 The purpose of this example is explain how to use FunctionalKit. It's a simple counter with an increment and decrement buttons. The State is just an integer that contains the current count. 
