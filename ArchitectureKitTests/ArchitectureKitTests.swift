@@ -64,6 +64,8 @@ class ArchitectureKitTests: XCTestCase {
         
         let expect = expectation(description: "testArchitecture")
         
+        typealias TestSystem = System<State,Event,SystemError, AppContext>
+        
         let context = AppContext()
         let button = UIButton()
         
@@ -95,7 +97,7 @@ class ArchitectureKitTests: XCTestCase {
         
         
         let userAction = UserAction<State, Event, SystemError, AppContext>(trigger: Event.loadCategories)
-        let system = System.pure(
+        let system = TestSystem.pure(
             initialState: initialState,
             context: context,
             reducer: State.reduce,
