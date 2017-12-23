@@ -108,7 +108,7 @@ class CounterViewController: UIViewController {
 }
 ```
 
-## Full application
+## Full application example
 
 You can find in [this repository](https://github.com/RPallas92/FunctionalSwiftArchitecture) a simple but full application with:  
 
