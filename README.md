@@ -104,6 +104,7 @@ class CounterViewController: UIViewController {
     }
 }
 ```
+<img src="https://github.com/kzaher/rxswiftcontent/raw/master/Counter.gif" width="320px" />
 
 ## Full application example
 
