@@ -81,7 +81,8 @@ class ArchitectureKitTests: XCTestCase {
             let categories = ["dev"]
             return AsyncResult<AppContext, Event, SystemError>.unfoldTT { _, continuation in
                 runInBackground { runInUI in
-                    let result = Result<SystemError, Event>.success(Event.categoriesLoaded(Result.success(categories)))
+                    let event = Event.categoriesLoaded(Result.success(categories))
+                    let result:Result<SystemError, Event> = Result.success(event)
                     runInUI {
                         continuation(result)
                     }
