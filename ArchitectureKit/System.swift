@@ -13,8 +13,8 @@ public struct Feedback<State, Event, ErrorType, Context> where ErrorType: Error{
     
     typealias StateAsyncResult = AsyncResult<Context, State, ErrorType>
 
-    var condition: (State) -> (Bool)
-    var action: (State) -> AsyncResult<Context, Event, ErrorType>
+    internal var condition: (State) -> (Bool)
+    internal var action: (State) -> AsyncResult<Context, Event, ErrorType>
     
     public static func react(_ action: @escaping (State) -> AsyncResult<Context, Event, ErrorType>, when condition: @escaping (State) -> (Bool)) -> Feedback {
         return Feedback(condition: condition, action: action)
@@ -31,7 +31,7 @@ public struct Feedback<State, Event, ErrorType, Context> where ErrorType: Error{
     }
 }
 
-public class System<State,Event,ErrorType,Context> where ErrorType: Error {
+public final class System<State,Event,ErrorType,Context> where ErrorType: Error {
     
     //TODO don't call UI if State is the same
     //TODO feedback that triggers other feedback
@@ -46,16 +46,16 @@ public class System<State,Event,ErrorType,Context> where ErrorType: Error {
     typealias FeedbackStateAsyncResult = AsyncResult<Context,(SystemFeedback,State),ErrorType>
 
     
-    var eventQueue = [Event]()
-    var callback: (() -> ())? = nil
+    internal var eventQueue = [Event]()
+    internal var callback: (() -> ())? = nil
     
-    var initialState: State
-    var context: Context
-    var reducer: (State, Event) -> State
-    var uiBindings: [(State) -> ()]
-    var actions: [SystemAction]
-    var feedback: [SystemFeedback]
-    var currentState: State
+    internal var initialState: State
+    internal var context: Context
+    internal var reducer: (State, Event) -> State
+    internal var uiBindings: [(State) -> ()]
+    internal var actions: [SystemAction]
+    internal var feedback: [SystemFeedback]
+    internal var currentState: State
     
     private init(
         initialState: State,
