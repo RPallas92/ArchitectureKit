@@ -13,8 +13,8 @@
 		969C8C781FE2DBDB007F7D97 /* ArchitectureKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 969C8C6E1FE2DBDB007F7D97 /* ArchitectureKit.framework */; };
 		969C8C7D1FE2DBDB007F7D97 /* ArchitectureKitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 969C8C7C1FE2DBDB007F7D97 /* ArchitectureKitTests.swift */; };
 		969C8C7F1FE2DBDB007F7D97 /* ArchitectureKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 969C8C711FE2DBDB007F7D97 /* ArchitectureKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		96F3C3AA1FE2E4E500D91813 /* UserAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96F3C3A41FE2E4E500D91813 /* UserAction.swift */; };
-		96F3C3AB1FE2E4E500D91813 /* UserAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96F3C3A41FE2E4E500D91813 /* UserAction.swift */; };
+		96F3C3AA1FE2E4E500D91813 /* Action.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96F3C3A41FE2E4E500D91813 /* Action.swift */; };
+		96F3C3AB1FE2E4E500D91813 /* Action.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96F3C3A41FE2E4E500D91813 /* Action.swift */; };
 		96F3C3B01FE2E4E500D91813 /* System.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96F3C3A71FE2E4E500D91813 /* System.swift */; };
 		96F3C3B11FE2E4E500D91813 /* System.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96F3C3A71FE2E4E500D91813 /* System.swift */; };
 		96F3C3B31FE2E53F00D91813 /* AsyncResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96F3C3B21FE2E53F00D91813 /* AsyncResult.swift */; };
@@ -42,7 +42,7 @@
 		969C8C7C1FE2DBDB007F7D97 /* ArchitectureKitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchitectureKitTests.swift; sourceTree = "<group>"; };
 		969C8C7E1FE2DBDB007F7D97 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		96F3C39B1FE2E0B300D91813 /* FunctionalKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = FunctionalKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		96F3C3A41FE2E4E500D91813 /* UserAction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserAction.swift; sourceTree = "<group>"; };
+		96F3C3A41FE2E4E500D91813 /* Action.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Action.swift; sourceTree = "<group>"; };
 		96F3C3A71FE2E4E500D91813 /* System.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = System.swift; sourceTree = "<group>"; };
 		96F3C3B21FE2E53F00D91813 /* AsyncResult.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AsyncResult.swift; sourceTree = "<group>"; };
 		96F3C3B91FE2E69600D91813 /* FunctionalKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = FunctionalKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -94,7 +94,7 @@
 			children = (
 				96F3C3B21FE2E53F00D91813 /* AsyncResult.swift */,
 				96F3C3A71FE2E4E500D91813 /* System.swift */,
-				96F3C3A41FE2E4E500D91813 /* UserAction.swift */,
+				96F3C3A41FE2E4E500D91813 /* Action.swift */,
 				969C8C711FE2DBDB007F7D97 /* ArchitectureKit.h */,
 				969C8C721FE2DBDB007F7D97 /* Info.plist */,
 			);
@@ -235,7 +235,7 @@
 			files = (
 				96F3C3B01FE2E4E500D91813 /* System.swift in Sources */,
 				96F3C3B31FE2E53F00D91813 /* AsyncResult.swift in Sources */,
-				96F3C3AA1FE2E4E500D91813 /* UserAction.swift in Sources */,
+				96F3C3AA1FE2E4E500D91813 /* Action.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -245,7 +245,7 @@
 			files = (
 				96F3C3B41FE2E53F00D91813 /* AsyncResult.swift in Sources */,
 				969C8C7D1FE2DBDB007F7D97 /* ArchitectureKitTests.swift in Sources */,
-				96F3C3AB1FE2E4E500D91813 /* UserAction.swift in Sources */,
+				96F3C3AB1FE2E4E500D91813 /* Action.swift in Sources */,
 				96F3C3B11FE2E4E500D91813 /* System.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
