@@ -113,7 +113,6 @@ class ArchitectureKitTests: XCTestCase {
         
         //Simulate user interaction - Tap button
         action.execute()
-        
         wait(for: [expect], timeout: 10.0)
     }
     
