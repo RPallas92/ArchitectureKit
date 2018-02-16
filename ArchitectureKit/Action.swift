@@ -42,13 +42,14 @@ public class UIButtonAction<State,Event,ErrorType, Context>: Action<State, Event
     var events = [UIControlEvents.RawValue: Event]()
     let button: UIButton
     
-    public init(button: UIButton) {
+    private init(button: UIButton) {
         self.button = button
     }
     
-    public func onTap(trigger event: Event) {
-        events[UIControlEvents.touchUpInside.rawValue] = event
-        self.button.addTarget(self, action:#selector(self.didTap), for: .touchUpInside)
+    public static func onTap(in button: UIButton, trigger event: Event) {
+        let action = UIButtonAction(button: button)
+        action.events[UIControlEvents.touchUpInside.rawValue] = event
+        action.button.addTarget(self, action:#selector(self.didTap), for: .touchUpInside)
     }
     
     @objc func didTap() {

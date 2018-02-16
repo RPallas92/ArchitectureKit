@@ -96,7 +96,6 @@ class ArchitectureKitTests: XCTestCase {
             Feedback<State, Event, SystemError, AppContext>.react({_ in loadCategories()}, when: { $0.shouldLoadData})
         ]
         
-        
         let action = CustomAction<State, Event, SystemError, AppContext>(trigger: Event.loadCategories)
         let system = TestSystem.pure(
             initialState: initialState,
