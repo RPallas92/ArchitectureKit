@@ -46,10 +46,11 @@ public class UIButtonAction<State,Event,ErrorType, Context>: Action<State, Event
         self.button = button
     }
     
-    public static func onTap(in button: UIButton, trigger event: Event) {
+    public static func onTap(in button: UIButton, trigger event: Event) -> UIButtonAction<State,Event,ErrorType, Context> {
         let action = UIButtonAction(button: button)
         action.events[UIControlEvents.touchUpInside.rawValue] = event
         action.button.addTarget(self, action:#selector(self.didTap), for: .touchUpInside)
+        return action
     }
     
     @objc func didTap() {
