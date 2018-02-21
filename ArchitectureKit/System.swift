@@ -36,7 +36,8 @@ public final class System<State,Event,ErrorType,Context> where ErrorType: Error 
     //TODO don't call UI if State is the same
     //TODO feedback that triggers other feedback
     
-    typealias SystemUserAction = UserAction<State,Event,ErrorType,Context>
+
+    typealias SystemAction = Action<State, Event, ErrorType, Context>
     typealias SystemFeedback = Feedback<State, Event, ErrorType, Context>
     typealias VoidAsyncResult = AsyncResult<Context, Void, ErrorType>
     typealias StateAsyncResult = AsyncResult<Context, State, ErrorType>
@@ -52,7 +53,7 @@ public final class System<State,Event,ErrorType,Context> where ErrorType: Error 
     internal var context: Context
     internal var reducer: (State, Event) -> State
     internal var uiBindings: [(State) -> ()]
-    internal var userActions: [SystemUserAction]
+    internal var actions: [SystemAction]
     internal var feedback: [SystemFeedback]
     internal var currentState: State
     
@@ -61,7 +62,7 @@ public final class System<State,Event,ErrorType,Context> where ErrorType: Error 
         context: Context,
         reducer: @escaping (State, Event) -> State,
         uiBindings: [(State) -> ()],
-        userActions: [SystemUserAction],
+        actions: [SystemAction],
         feedback: [SystemFeedback]
         ) {
         
@@ -69,11 +70,11 @@ public final class System<State,Event,ErrorType,Context> where ErrorType: Error 
         self.context = context
         self.reducer = reducer
         self.uiBindings = uiBindings
-        self.userActions = userActions
+        self.actions = actions
         self.feedback = feedback
         self.currentState = initialState
         
-        self.userActions.forEach { action in
+        self.actions.forEach { action in
             action.addListener(listener: self)
         }
     }
@@ -83,10 +84,10 @@ public final class System<State,Event,ErrorType,Context> where ErrorType: Error 
         context: Context,
         reducer: @escaping (State, Event) -> State,
         uiBindings: [(State) -> ()],
-        userActions: [UserAction<State,Event,ErrorType,Context>],
+        actions: [Action<State, Event, ErrorType, Context>],
         feedback: [Feedback<State, Event, ErrorType, Context>]
         ) -> System {
-        return System<State,Event,ErrorType, Context>(initialState: initialState, context: context, reducer: reducer, uiBindings: uiBindings, userActions: userActions, feedback: feedback)
+        return System<State,Event,ErrorType, Context>(initialState: initialState, context: context, reducer: reducer, uiBindings: uiBindings, actions: actions, feedback: feedback)
     }
     
     public func addLoopCallback(callback: @escaping ()->()){
@@ -95,8 +96,7 @@ public final class System<State,Event,ErrorType,Context> where ErrorType: Error 
     
     var actionExecuting = false
     
-    //TODO: USE A REAL QUEUE
-    func onUserAction(_ action: Event) {
+    func onAction(_ action: Event) {
         assert(Thread.isMainThread)
         if(actionExecuting){
             self.eventQueue.append(action)
@@ -109,7 +109,7 @@ public final class System<State,Event,ErrorType,Context> where ErrorType: Error 
                     self.actionExecuting = false
                     if let nextEvent = self.eventQueue.first {
                         self.eventQueue.removeFirst()
-                        self.onUserAction(nextEvent)
+                        self.onAction(nextEvent)
                     }
                 }
             })
